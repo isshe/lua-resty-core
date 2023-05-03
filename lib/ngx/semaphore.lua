@@ -98,11 +98,13 @@ local mt = { __index = _M }
 
 
 function _M.new(n)
+    -- 检查参数
     n = tonumber(n) or 0
     if n < 0 then
         error("no negative number", 2)
     end
 
+    -- 调用 C 函数创建对象
     local ret = ngx_lua_ffi_sema_new(psem, n, errmsg)
     if ret == FFI_ERROR then
         return nil, ffi_str(errmsg[0])
@@ -110,6 +112,7 @@ function _M.new(n)
 
     local sem = psem[0]
 
+    -- 绑定 gc 函数：当释放 sem 时，会调用 ngx_lua_ffi_sema_gc
     ffi_gc(sem, ngx_lua_ffi_sema_gc)
 
     return setmetatable({ sem = sem }, mt)

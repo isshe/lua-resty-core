@@ -903,7 +903,7 @@ else
     end
 end
 
-
+-- 随便取一个 shared dict 出来，修改它的元表（所有的 shared dict 共用一个元表）
 local _, dict = next(ngx_shared, nil)
 if dict then
     local mt = getmetatable(dict)
